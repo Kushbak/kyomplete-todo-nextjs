@@ -1,0 +1,11 @@
+.newTaskForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+
+  &__submit {
+    margin: 20px 0;
+    padding: 12px 0;
+  }
+}
