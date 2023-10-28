@@ -1,0 +1,17 @@
+.task {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  padding: 10px;
+  background-color: var(--c-grey);
+  color: var(--c-black);
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--c-black);
+  }
+
+  &__actions {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
