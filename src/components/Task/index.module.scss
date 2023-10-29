@@ -1,6 +1,7 @@
 .task {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   font-size: 14px;
   padding: 10px;
   background-color: var(--c-grey);
@@ -13,5 +14,12 @@
     flex: 1;
     display: flex;
     justify-content: flex-end;
+  }
+
+  &__due {
+    flex-basis: 100%;
+    &_over {
+      color: tomato;
+    }
   }
 }

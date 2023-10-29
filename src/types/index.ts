@@ -3,7 +3,6 @@ export interface ITask {
   title: string
   is_completed: boolean
   due_date?: string
-  due_time?: string
 
   assigned_to?: any
   author?: any 
