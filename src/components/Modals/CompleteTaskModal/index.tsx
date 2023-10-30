@@ -2,13 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import ModalTemplate from "../modal-template"
-import { PAGES } from "@/utils/const"
 import { Editor } from "react-draft-wysiwyg"
 import styles from './index.module.scss'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { tasksApi } from "@/api"
 import { useState } from "react"
-import { convertToRaw, EditorState } from "draft-js"
+import { convertToRaw, EditorState, RichUtils } from "draft-js"
 import { Button } from "@mui/material"
 import { toast } from "react-toastify"
 
@@ -20,10 +19,10 @@ const CompleteTask = ({ onClose }: Props) => {
   const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
   const router = useRouter()
   const searchParams = useSearchParams()
-  
+
   const onSubmit = async () => {
     const id = searchParams.get('id')
-    if(id) {
+    if (id) {
       const contentState = editorState.getCurrentContent();
       const raw = convertToRaw(contentState)
       try {
@@ -36,13 +35,14 @@ const CompleteTask = ({ onClose }: Props) => {
       }
     }
   }
-  
+
   return (
     <ModalTemplate title="Complete Task" onClose={onClose}>
       <div className={styles.completeTask}>
-        <Editor 
+        <Editor
           editorState={editorState}
           onEditorStateChange={setEditorState}
+          editorClassName={styles.completeTask__editor}
         />
         <div className="styles completeTask__actions">
           <Button variant="contained" onClick={onSubmit}>Save</Button>
