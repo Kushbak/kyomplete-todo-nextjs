@@ -7,7 +7,7 @@ import styles from './index.module.scss'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { tasksApi } from "@/api"
 import { useState } from "react"
-import { convertToRaw, EditorState, RichUtils } from "draft-js"
+import { convertToRaw, EditorState } from "draft-js"
 import { Button } from "@mui/material"
 import { toast } from "react-toastify"
 

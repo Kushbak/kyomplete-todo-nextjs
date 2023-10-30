@@ -17,6 +17,7 @@ const Modals = () => {
   const handleCloseModal = () => {
     const searchParamsWithoutModal = new URLSearchParams(searchParams)
     searchParamsWithoutModal.delete('modal')
+    searchParamsWithoutModal.delete('id')
     router.push(`${pathname}?${searchParamsWithoutModal}`)
   }
 

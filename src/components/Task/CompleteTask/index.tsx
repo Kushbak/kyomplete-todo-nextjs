@@ -1,6 +1,6 @@
 'use client'
 
-import { MODALS, MODAL_KEYS } from "@/utils/const"
+import { MODAL_KEYS } from "@/utils/const"
 import { Checkbox } from "@mui/material"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 

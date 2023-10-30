@@ -1,6 +1,7 @@
 import { RawDraftContentState } from "react-draft-wysiwyg"
 import { SelectOption } from "./common"
 import { IUser } from "./user"
+import { Dayjs } from "dayjs"
 
 export interface ITask {
   id: number
@@ -14,7 +15,7 @@ export interface ITask {
 
 export interface ITaskForm {
   title: string
-  due_date: string | null
+  due_date: Dayjs | null
   assigned_to: SelectOption | null
   author?: IUser
 }

@@ -2,7 +2,7 @@
 
 import { tasksApi } from "@/api"
 import { toRequestDateFormat } from "@/utils"
-import { MODALS, MODAL_KEYS, TIME_INTERVALS } from "@/utils/const"
+import { MODAL_KEYS, TIME_INTERVALS } from "@/utils/const"
 import { Alarm, Delete, Edit } from "@mui/icons-material"
 import { IconButton, MenuItem, TextField } from "@mui/material"
 import { LocalizationProvider, MobileDateTimePicker } from "@mui/x-date-pickers"

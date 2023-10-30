@@ -88,7 +88,6 @@ const TaskFilterPanel = () => {
             label='Is Completed'
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            displayEmpty
             value={filters.isCompleted}
             onChange={(e) => handleChange('isCompleted', e.target.value)}
           >

@@ -12,8 +12,9 @@ import { ITaskForm, SelectOption } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import dayjs from "@/utils/dayjs";
 import { tasksApi, usersApi } from "@/api";
-import { convertToSelect, toRequestDateFormat } from "@/utils";
+import { convertToSelect, getToday, toRequestDateFormat } from "@/utils";
 import styles from './index.module.scss'
+import { Dayjs } from "dayjs";
 
 interface Props {
   isEdit?: boolean
@@ -62,7 +63,7 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
     onClose()
   }
 
-  const handleDateChange = (value: string | null) => {
+  const handleDateChange = (value: Dayjs | string | null) => {
     formik.setFieldValue('due_date', value)
   }
 
@@ -75,10 +76,9 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
   const formik = useFormik<ITaskForm>({
     initialValues: {
       title: '',
-      due_date: null,
+      due_date: getToday().add(1, 'day'),
       assigned_to: null
     },
-    enableReinitialize: true,
     onSubmit,
   })
 

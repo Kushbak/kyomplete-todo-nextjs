@@ -1,6 +1,6 @@
 'use client'
 
-import { MODALS, MODAL_KEYS } from "@/utils/const"
+import { MODAL_KEYS } from "@/utils/const"
 import { Add } from "@mui/icons-material"
 import { Button } from "@mui/material"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
