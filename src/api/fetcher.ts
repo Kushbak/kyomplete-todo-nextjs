@@ -1,5 +1,4 @@
 import { objectToSearchParams } from "@/utils";
-import { toast } from "react-toastify";
 
 interface FetcherParams {
   base_url: string;
