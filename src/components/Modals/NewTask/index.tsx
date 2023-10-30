@@ -4,17 +4,15 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Autocomplete, Button, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import ModalTemplate from "@/components/Modals/modal-template";
-import { PAGES } from "@/utils/const";
 import { ITaskForm, SelectOption } from "@/types";
-import { useRouter, useSearchParams } from "next/navigation";
-import dayjs from "@/utils/dayjs";
+import dayjs, { Dayjs } from "@/utils/dayjs";
 import { tasksApi, usersApi } from "@/api";
 import { convertToSelect, getToday, toRequestDateFormat } from "@/utils";
 import styles from './index.module.scss'
-import { Dayjs } from "dayjs";
 
 interface Props {
   isEdit?: boolean
@@ -94,7 +92,7 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
       }
     }
     getTask()
-  }, [users])
+  }, [formik, isEdit, searchParams, users])
 
   useEffect(() => {
     const fetchUsers = async () => {

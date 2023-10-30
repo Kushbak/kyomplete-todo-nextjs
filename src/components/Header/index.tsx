@@ -8,7 +8,7 @@ const Header = () => {
     <header className={styles.header}>
       <Link href={PAGES.HOME}>Kyomplete Todo</Link>
 
-      <div className={styles.tasksView__header}>
+      <div className={styles.header__addTaskBtn}>
         <AddTaskButton />
       </div>
     </header>

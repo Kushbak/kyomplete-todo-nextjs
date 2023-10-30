@@ -1,7 +1,6 @@
 import { SelectOption } from "@/types";
 import { DATE_PICKER_STATE_FORMAT, REQUEST_DATE_FORMAT } from "./const";
-import dayjs from "./dayjs";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "./dayjs";
 
 export const hasValue = (val: any) => {
   // need this to check empty value of mui components
