@@ -1,6 +1,7 @@
 import { ITask } from "@/types"
-import styles from './index.module.scss'
 import Task from "../Task"
+import TaskFilterPanel from "../TaskFilterPanel"
+import styles from './index.module.scss'
 
 interface Props {
   tasks: ITask[]
@@ -9,6 +10,7 @@ interface Props {
 const TasksView = ({ tasks }: Props) => {
   return (
     <div className={styles.tasksView}>
+      <TaskFilterPanel />
       {tasks.length ? tasks.map(item => <Task task={item} key={item.id} />) : 'No Tasks'}
     </div>
   )
