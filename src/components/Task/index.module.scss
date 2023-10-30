@@ -10,15 +10,27 @@
     border-bottom: 1px solid var(--c-black);
   }
 
+  &__assignee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: flex-end;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background-color: bisque;
+    margin-right: 20px;
+  }
+
   &_completed {
     opacity: 0.5;
-    pointer-events: none;
   }
 
   &__actions {
     flex: 1;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
   }
 
   &__due {
