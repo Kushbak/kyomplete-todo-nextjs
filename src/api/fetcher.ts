@@ -12,20 +12,42 @@ export default class Fetcher {
     this.base_url = base_url;
   }
 
-  async get<T>(url: string, params?: Record<string, any>, init: RequestInit = {}): Promise<T> {
-    const paramsStr = objectToSearchParams(params || {}).toString();
-    const data = await this.fetcher(`${url}/${paramsStr}`, {
+  async get<T>(
+    url: string,
+    params: Record<string, any> = {},
+    init: RequestInit = {}
+  ): Promise<T> {
+    const paramsStr = objectToSearchParams(params).toString();
+    const data = await this.fetcher(`${url}/?${paramsStr}`, {
       ...init,
     });
     return data;
   }
 
-  async post<T>(url: string, body: Record<string, any>, init: RequestInit = {}): Promise<T> {
+  async post<T>(
+    url: string,
+    body: Record<string, any>,
+    init: RequestInit = {}
+  ): Promise<T> {
     const data = await this.fetcher(url, {
       ...init,
-      body: JSON.stringify(body),
       method: "POST",
+      body: JSON.stringify(body),
     });
+    return data;
+  }
+
+  async patch<T>(
+    url: string,
+    body: Record<string, any>,
+    init: RequestInit = {}
+  ): Promise<T> {
+    const data = await this.fetcher(url, {
+      ...init,
+      method: "PATCH",
+      body: JSON.stringify(body),
+    });
+
     return data;
   }
 
@@ -41,20 +63,13 @@ export default class Fetcher {
         ...options,
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       });
-      if(res.status >= 500) {
-        throw Error('Server Error')
-      }
       const data = await res.json();
-      return data
-    } catch(e) {
-      console.log(e)
-      if(e === 'Server Error') {
-        toast.error('Server error. Please try again later')
-      } else {
-        throw new Error()
-      }
+      return data;
+    } catch (e) {
+      console.log(e);
+      throw e;
     }
   }
 }
