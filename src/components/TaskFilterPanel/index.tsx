@@ -2,20 +2,22 @@
 
 import { usersApi } from "@/api"
 import { FilterState, SelectOption } from "@/types"
-import { convertToSelect, hasValue, objectToSearchParams, searchParamsToObject, toDatePickerStateFormat, toRequestDateFormat } from "@/utils"
+import { convertToSelect, objectToSearchParams, searchParamsToObject, toRequestDateFormat } from "@/utils"
 import { Autocomplete, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { PAGES } from "@/utils/const"
-import styles from './index.module.scss'
 import { Dayjs } from "dayjs"
+import dayjs from '@/utils/dayjs'
+import styles from './index.module.scss'
 
 const TaskFilterPanel = () => {
   const [users, setUsers] = useState<SelectOption[]>([])
   const [filters, setFilters] = useState<FilterState>({})
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const handleChange = (name: string, value: string | SelectOption[] | Dayjs | null) => {
     setFilters({
@@ -24,17 +26,17 @@ const TaskFilterPanel = () => {
     })
   }
 
-  const fetchFilters = () => {
-    const assignedStr = filters.assigned_to?.map(item => item.value).join(',')
+  const applyFilters = () => {
+    const assignedStr = filters.assignedTo?.map(item => item.value).join(',')
     const params = {
       assigned_to: assignedStr,
-      due_date_from: filters.due_date_from ? toRequestDateFormat(filters.due_date_from) : null,
-      due_date_to: filters.due_date_to ? toRequestDateFormat(filters.due_date_to, true) : null,
-      is_completed: filters.is_completed,
+      due_date_from: filters.dueDateFrom ? toRequestDateFormat(filters.dueDateFrom) : null,
+      due_date_to: filters.dueDateTo ? toRequestDateFormat(filters.dueDateTo, true) : null,
+      is_completed: filters.isCompleted,
     }
     const searchParams = objectToSearchParams(params).toString()
 
-    router.push(PAGES.HOME + '?' + searchParams)
+    router.push(`${PAGES.HOME}?${searchParams}`)
     router.refresh()
   }
 
@@ -46,39 +48,48 @@ const TaskFilterPanel = () => {
     fetchUsers()
   }, [])
 
-  // useEffect(() => {
-  //   const params: FilterState = searchParamsToObject(searchParams)
+  useEffect(() => {
+    const params = searchParamsToObject(searchParams)
+    const filtersParams: FilterState = {}
+    if (params.due_date_from) {
+      filtersParams.dueDateFrom = dayjs(params.due_date_from)
+    }
+    if (params.due_date_to) {
+      filtersParams.dueDateTo = dayjs(params.due_date_to)
+    }
+    if(params.assigned_to) {
+      const assignedUsersFilter = params.assigned_to.split(',')
+      const assignedUsersToSelect = users.filter(item => assignedUsersFilter.includes(String(item.value)))
+      filtersParams.assignedTo = assignedUsersToSelect
+    }
+    if(params.is_completed) {
+      filtersParams.isCompleted = params.is_completed
+      handleChange('isCompleted', params.is_completed)
+    }
 
-    // if (params.due_date_from) {
-    //   params.due_date_from = toDatePickerStateFormat(params.due_date_from)
-    // }
-    // if (params.due_date_to) {
-    //   params.due_date_to = toDatePickerStateFormat(params.due_date_to)
-    // }
-
-  //   setFilters(params)
-  // }, [])
+    setFilters(filtersParams)
+  }, [users])
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={styles.taskFilterPanel}>
         <Autocomplete
           options={users}
-          value={filters.assigned_to}
-          onChange={(e, value) => handleChange('assigned_to', value)}
+          value={filters.assignedTo}
+          onChange={(e, value) => handleChange('assignedTo', value)}
           renderInput={params => <TextField {...params} label='Assigned to' />}
           multiple
           disableCloseOnSelect
+          fullWidth
         />
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Completed</InputLabel>
+          <InputLabel id="demo-simple-select-label">Is Completed</InputLabel>
           <Select<string>
-            label='Completed'
+            label='Is Completed'
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            unselectable="on"
-            value={filters.is_completed}
-            onChange={(e) => handleChange('is_completed', e.target.value)}
+            value={filters.isCompleted}
+            onChange={(e) => handleChange('isCompleted', e.target.value)}
           >
             <MenuItem value=''>All</MenuItem>
             <MenuItem value='true'>Completed</MenuItem>
@@ -89,21 +100,21 @@ const TaskFilterPanel = () => {
           slotProps={{
             field: { clearable: true },
           }}
-          value={filters.due_date_from}
+          value={filters.dueDateFrom}
           label='Due Date From'
-          onChange={(value) => handleChange('due_date_from', value)}
+          onChange={(value) => handleChange('dueDateFrom', value)}
           closeOnSelect
         />
         <DatePicker
           slotProps={{
             field: { clearable: true },
           }}
-          value={filters.due_date_to}
+          value={filters.dueDateTo}
           label='Due Date To'
-          onChange={(value) => handleChange('due_date_to', value)}
+          onChange={(value) => handleChange('dueDateTo', value)}
           closeOnSelect
         />
-        <Button onClick={fetchFilters} variant="contained">Filter</Button>
+        <Button onClick={applyFilters} variant="contained">Apply Filters</Button>
       </div>
     </LocalizationProvider>
   )

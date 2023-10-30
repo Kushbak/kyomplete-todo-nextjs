@@ -2,9 +2,12 @@ export const PAGES = {
   HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
-  NEW_TASK_MODAL: '/?modal=new-task',
-  EDIT_TASK_MODAL: '/?modal=edit-task&id=',
-  COMPLETE_TASK_MODAL: '/?modal=complete-task&id=',
+}
+
+export const MODAL_KEYS = {
+  NEW_TASK: 'new-task',
+  EDIT_TASK: 'edit-task',
+  COMPLETE_TASK: 'complete-task',
 }
 
 export const REQUEST_DATE_FORMAT = 'MM/DD/YYYY hh:mm A'

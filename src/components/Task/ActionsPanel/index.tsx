@@ -1,17 +1,16 @@
 'use client'
 
 import { tasksApi } from "@/api"
-import { toDatePickerStateFormat, toRequestDateFormat } from "@/utils"
-import { PAGES, TIME_INTERVALS } from "@/utils/const"
+import { toRequestDateFormat } from "@/utils"
+import { MODAL_KEYS, TIME_INTERVALS } from "@/utils/const"
 import { Alarm, Delete, Edit } from "@mui/icons-material"
 import { IconButton, MenuItem, TextField } from "@mui/material"
-import { DateTimePicker, LocalizationProvider, MobileDateTimePicker } from "@mui/x-date-pickers"
+import { LocalizationProvider, MobileDateTimePicker } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import dayjs from "@/utils/dayjs"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { toast } from "react-toastify"
-import { propagateServerField } from "next/dist/server/lib/render-server"
 import { Dayjs } from "dayjs"
 
 interface Props {
@@ -25,6 +24,7 @@ const UpdateDueIcon = (props: any) => (
   </IconButton>
 )
 
+// to add 30min interval time picker
 const TimeSlot = (props: any) => (
   <TextField
     {...props}
@@ -46,6 +46,8 @@ const TimeSlot = (props: any) => (
 const ActionsPanel = ({ taskId, due_date }: Props) => {
   const [isUpdateDueModalOpen, setIsUpdateDueModalOpen] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const handleDeleteTask = async () => {
     try {
@@ -58,7 +60,10 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
   }
 
   const handleOpenEditTask = () => {
-    router.push(PAGES.EDIT_TASK_MODAL + taskId)
+    const searchParamsWithModal = new URLSearchParams(searchParams)
+    searchParamsWithModal.append('modal', MODAL_KEYS.EDIT_TASK)
+    searchParamsWithModal.append('id', String(taskId))
+    router.push(`${pathname}?${searchParamsWithModal}` )
   }
 
   const handleOpenDueModal = () => setIsUpdateDueModalOpen(true)
@@ -85,7 +90,6 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
         autoFocus
         slots={{
           field: UpdateDueIcon,
-          textField: TimeSlot,
         }}
         onOpen={handleOpenDueModal}
         onClose={handleCloseDueModal}
