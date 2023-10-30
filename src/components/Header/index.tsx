@@ -1,6 +1,7 @@
-import { PAGES } from "@/const"
+import { PAGES } from "@/utils/const"
 import Link from "next/link"
 import styles from './index.module.scss'
+import AddTaskButton from "../AddTaskButton"
 
 const Header = () => {
   return (
@@ -8,9 +9,8 @@ const Header = () => {
       <Link href={PAGES.HOME}>Kyomplete Todo</Link>
 
       <div className={styles.tasksView__header}>
-        <Link href={PAGES.NEW_TASK_MODAL}>ADD TASK</Link>
+        <AddTaskButton />
       </div>
-      <p>ME</p>
     </header>
   )
 }
