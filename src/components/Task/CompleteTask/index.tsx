@@ -1,8 +1,8 @@
 'use client'
 
-import { PAGES } from "@/utils/const"
+import { MODALS, MODAL_KEYS } from "@/utils/const"
 import { Checkbox } from "@mui/material"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 interface Props {
   taskId: number
@@ -11,9 +11,14 @@ interface Props {
 
 const CompleteTask = ({ taskId, is_completed }: Props) => {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const onClick = () => {
-    router.push(PAGES.COMPLETE_TASK_MODAL + taskId)
+    const searchParamsWithModal = new URLSearchParams(searchParams)
+    searchParamsWithModal.append('modal', MODAL_KEYS.COMPLETE_TASK)
+    searchParamsWithModal.append('id', String(taskId))
+    router.push(`${pathname}?${searchParamsWithModal}` )
   }
   
   return (

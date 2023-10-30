@@ -11,7 +11,9 @@ const TasksView = ({ tasks }: Props) => {
   return (
     <div className={styles.tasksView}>
       <TaskFilterPanel />
-      {tasks.length ? tasks.map(item => <Task task={item} key={item.id} />) : 'No Tasks'}
+      <div className={styles.tasksView__list}>
+        {tasks.length ? tasks.map(item => <Task task={item} key={item.id} />) : 'No Tasks'}
+      </div>
     </div>
   )
 }

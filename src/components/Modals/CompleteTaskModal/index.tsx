@@ -12,7 +12,11 @@ import { convertToRaw, EditorState } from "draft-js"
 import { Button } from "@mui/material"
 import { toast } from "react-toastify"
 
-const CompleteTask = () => {
+interface Props {
+  onClose: () => void
+}
+
+const CompleteTask = ({ onClose }: Props) => {
   const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -31,10 +35,6 @@ const CompleteTask = () => {
         toast.error('Failed to mark the task complete. Please try again')
       }
     }
-  }
-
-  const onClose = () => {
-    router.push(PAGES.HOME)
   }
   
   return (

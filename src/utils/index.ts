@@ -38,7 +38,7 @@ export const toRequestDateFormat = (
   return d.format(REQUEST_DATE_FORMAT);
 };
 
-export const toDatePickerStateFormat = (date: string) => {
+export const toDatePickerStateFormat = (date: string | Dayjs) => {
   return dayjs(date).format(DATE_PICKER_STATE_FORMAT)
 }
 

@@ -17,9 +17,10 @@ import styles from './index.module.scss'
 
 interface Props {
   isEdit?: boolean
+  onClose: () => void
 }
 
-const NewTaskModal = ({ isEdit }: Props) => {
+const NewTaskModal = ({ isEdit, onClose }: Props) => {
   const [users, setUsers] = useState<SelectOption[]>([])
   const searchParams = useSearchParams()
   const router = useRouter();
@@ -67,10 +68,6 @@ const NewTaskModal = ({ isEdit }: Props) => {
 
   const handleAssigneeChange = (data: SelectOption | null) => {
     formik.setFieldValue('assigned_to', data)
-  }
-
-  const onClose = () => {
-    router.push(PAGES.HOME)
   }
 
   const title = isEdit ? 'Edit Task' : 'New Task'
