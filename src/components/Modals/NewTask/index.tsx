@@ -92,7 +92,7 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
       }
     }
     getTask()
-  }, [formik, isEdit, searchParams, users])
+  }, [users])
 
   useEffect(() => {
     const fetchUsers = async () => {
