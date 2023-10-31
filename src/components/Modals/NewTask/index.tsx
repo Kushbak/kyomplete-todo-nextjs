@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Autocomplete, Button, TextField } from "@mui/material";
+import { Autocomplete, Button, Chip, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import ModalTemplate from "@/components/Modals/modal-template";
 import { ITaskForm, SelectOption } from "@/types";
@@ -92,7 +92,7 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
       }
     }
     getTask()
-  }, [formik, isEdit, searchParams, users])
+  }, [users])
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -112,9 +112,15 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
             onChange={(e, data) => handleAssigneeChange(data)}
             value={formik.values.assigned_to}
             renderInput={params => <TextField {...params} label='Assign to' name="assigned_to" required />}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
             renderOption={(props, option) => (
               <li {...props} key={option.id}>{option.label}</li>
             )}
+            renderTags={(tagValue, getTagProps) => {
+              return tagValue.map((option, index) => (
+                <Chip {...getTagProps({ index })} key={option.id} label={option.label} />
+              ))
+            }}
           />
           <DateTimePicker label="Basic date time picker" value={formik.values.due_date} onChange={handleDateChange} />
           <Button type="submit" className={styles.newTaskForm__submit} variant="contained">Submit</Button>

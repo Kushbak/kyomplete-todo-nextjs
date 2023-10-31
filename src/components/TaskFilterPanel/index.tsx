@@ -1,19 +1,23 @@
 'use client'
 
-import { Autocomplete, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import { Autocomplete, Button, Chip, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { usersApi } from "@/api"
 import { PAGES } from "@/utils/const"
-import { FilterState, SelectOption } from "@/types"
+import { FilterState, IUser, SelectOption } from "@/types"
 import { convertToSelect, objectToSearchParams, searchParamsToObject, toRequestDateFormat } from "@/utils"
 import dayjs, { Dayjs } from '@/utils/dayjs'
 import styles from './index.module.scss'
 
-const TaskFilterPanel = () => {
-  const [users, setUsers] = useState<SelectOption[]>([])
+interface Props {
+  users: IUser[]
+}
+
+const TaskFilterPanel = ({ users }: Props) => {
+  const [usersList, setUsersList] = useState<SelectOption[]>([])
   const [filters, setFilters] = useState<FilterState>({
     isCompleted: '',
     dueDateFrom: null,
@@ -45,19 +49,9 @@ const TaskFilterPanel = () => {
   }
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await usersApi.getAllUsers()
-      setUsers(convertToSelect(data, 'username', 'id'))
-    }
-    fetchUsers()
-  }, [])
-
-  useEffect(() => {
     if(!searchParams.size) return
     const params = searchParamsToObject(searchParams)
-    const filtersParams: FilterState = {
-      ...filters,
-    }
+    const filtersParams: FilterState = {}
     if (params.due_date_from) {
       filtersParams.dueDateFrom = dayjs(params.due_date_from)
     }
@@ -66,21 +60,25 @@ const TaskFilterPanel = () => {
     }
     if(params.assigned_to) {
       const assignedUsersFilter = params.assigned_to.split(',')
-      const assignedUsersToSelect = users.filter(item => assignedUsersFilter.includes(String(item.value)))
+      const assignedUsersToSelect = usersList.filter(item => assignedUsersFilter.includes(String(item.value)))
       filtersParams.assignedTo = assignedUsersToSelect
     }
     if(params.is_completed) {
       filtersParams.isCompleted = params.is_completed
     }
 
-    setFilters(filtersParams)
+    setFilters((prevState) => ({ ...prevState, ...filtersParams }))
+  }, [usersList])
+
+  useEffect(() => {
+    setUsersList(convertToSelect(users, 'username', 'id'))
   }, [users])
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={styles.taskFilterPanel}>
         <Autocomplete
-          options={users}
+          options={usersList}
           value={filters.assignedTo}
           onChange={(e, value) => handleChange('assignedTo', value)}
           renderInput={params => <TextField {...params} label='Assigned to' />}
@@ -90,6 +88,12 @@ const TaskFilterPanel = () => {
           renderOption={(props, option) => (
             <li {...props} key={option.id}>{option.label}</li>
           )}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
+          renderTags={(tagValue, getTagProps) => {
+            return tagValue.map((option, index) => (
+              <Chip {...getTagProps({ index })} key={option.id} label={option.label} />
+            ))
+          }}
         />
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Is Completed</InputLabel>

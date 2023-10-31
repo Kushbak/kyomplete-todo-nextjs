@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { Alarm, Delete, Edit } from "@mui/icons-material"
 import { IconButton, MenuItem, TextField, TextFieldProps } from "@mui/material"
@@ -81,17 +81,19 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
       <IconButton onClick={handleOpenDueModal} aria-label="due">
         <Alarm />
       </IconButton>
-      <MobileDateTimePicker
-        ampm
-        autoFocus
-        slots={{
-          textField: () => <></>,
-        }}
-        onClose={handleCloseDueModal}
-        open={isUpdateDueModalOpen}
-        onAccept={handleSaveUpdatedDue}
-        defaultValue={dayjs(due_date)}
-      />
+      {isUpdateDueModalOpen &&
+        <MobileDateTimePicker
+          ampm
+          autoFocus
+          slots={{
+            textField: () => <></>,
+          }}
+          onClose={handleCloseDueModal}
+          open={isUpdateDueModalOpen}
+          onAccept={handleSaveUpdatedDue}
+          defaultValue={dayjs(due_date)}
+        />
+      }
       <IconButton onClick={handleDeleteTask} aria-label="delete">
         <Delete />
       </IconButton>
