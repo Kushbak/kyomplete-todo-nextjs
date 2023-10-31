@@ -112,6 +112,9 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
             onChange={(e, data) => handleAssigneeChange(data)}
             value={formik.values.assigned_to}
             renderInput={params => <TextField {...params} label='Assign to' name="assigned_to" required />}
+            renderOption={(props, option) => (
+              <li {...props} key={option.id}>{option.label}</li>
+            )}
           />
           <DateTimePicker label="Basic date time picker" value={formik.values.due_date} onChange={handleDateChange} />
           <Button type="submit" className={styles.newTaskForm__submit} variant="contained">Submit</Button>

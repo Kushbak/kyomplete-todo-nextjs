@@ -7,7 +7,7 @@ interface Props {
   tasks: ITask[]
 }
 
-const TasksView = ({ tasks }: Props) => {
+const TasksView = ({ tasks = [] }: Props) => {
   return (
     <div className={styles.tasksView}>
       <TaskFilterPanel />

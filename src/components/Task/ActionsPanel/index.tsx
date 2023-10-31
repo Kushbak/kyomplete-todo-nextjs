@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { Alarm, Delete, Edit } from "@mui/icons-material"
-import { IconButton, MenuItem, TextField } from "@mui/material"
+import { IconButton, MenuItem, TextField, TextFieldProps } from "@mui/material"
 import { LocalizationProvider, MobileDateTimePicker } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { tasksApi } from "@/api"
@@ -16,12 +16,6 @@ interface Props {
   taskId: number
   due_date: string
 }
-
-const UpdateDueIcon = (props: any) => (
-  <IconButton {...props} aria-label="due">
-    <Alarm />
-  </IconButton>
-)
 
 // to add 30min interval time picker
 const TimeSlot = (props: any) => (
@@ -62,7 +56,7 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
     const searchParamsWithModal = new URLSearchParams(searchParams)
     searchParamsWithModal.append('modal', MODAL_KEYS.EDIT_TASK)
     searchParamsWithModal.append('id', String(taskId))
-    router.push(`${pathname}?${searchParamsWithModal}` )
+    router.push(`${pathname}?${searchParamsWithModal}`)
   }
 
   const handleOpenDueModal = () => setIsUpdateDueModalOpen(true)
@@ -84,13 +78,15 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
       <IconButton onClick={handleOpenEditTask} aria-label="edit">
         <Edit />
       </IconButton>
+      <IconButton onClick={handleOpenDueModal} aria-label="due">
+        <Alarm />
+      </IconButton>
       <MobileDateTimePicker
         ampm
         autoFocus
         slots={{
-          field: UpdateDueIcon,
+          textField: () => <></>,
         }}
-        onOpen={handleOpenDueModal}
         onClose={handleCloseDueModal}
         open={isUpdateDueModalOpen}
         onAccept={handleSaveUpdatedDue}

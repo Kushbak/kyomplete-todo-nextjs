@@ -9,11 +9,12 @@ export interface IModal {
 export interface SelectOption {
   label: string
   value: string | number
+  id: string
 }
 
 export interface FilterState {
   assignedTo?: SelectOption[]
   isCompleted?: string
-  dueDateFrom?: Dayjs
-  dueDateTo?: Dayjs
+  dueDateFrom?: Dayjs | null
+  dueDateTo?: Dayjs | null
 }
