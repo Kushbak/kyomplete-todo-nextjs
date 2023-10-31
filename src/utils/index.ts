@@ -49,6 +49,7 @@ export const convertToSelect = (
   valueKey = "id"
 ): SelectOption[] => {
   return data.map((item) => ({
+    id: String(item['id'] || item[valueKey]),
     label: item[labelKey],
     value: item[valueKey],
   }));

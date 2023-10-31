@@ -14,7 +14,12 @@ import styles from './index.module.scss'
 
 const TaskFilterPanel = () => {
   const [users, setUsers] = useState<SelectOption[]>([])
-  const [filters, setFilters] = useState<FilterState>({})
+  const [filters, setFilters] = useState<FilterState>({
+    isCompleted: '',
+    dueDateFrom: null,
+    dueDateTo: null,
+    assignedTo: []
+  })
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -48,8 +53,11 @@ const TaskFilterPanel = () => {
   }, [])
 
   useEffect(() => {
+    if(!searchParams.size) return
     const params = searchParamsToObject(searchParams)
-    const filtersParams: FilterState = {}
+    const filtersParams: FilterState = {
+      ...filters,
+    }
     if (params.due_date_from) {
       filtersParams.dueDateFrom = dayjs(params.due_date_from)
     }
@@ -63,7 +71,6 @@ const TaskFilterPanel = () => {
     }
     if(params.is_completed) {
       filtersParams.isCompleted = params.is_completed
-      handleChange('isCompleted', params.is_completed)
     }
 
     setFilters(filtersParams)
@@ -80,6 +87,9 @@ const TaskFilterPanel = () => {
           multiple
           disableCloseOnSelect
           fullWidth
+          renderOption={(props, option) => (
+            <li {...props} key={option.id}>{option.label}</li>
+          )}
         />
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Is Completed</InputLabel>
