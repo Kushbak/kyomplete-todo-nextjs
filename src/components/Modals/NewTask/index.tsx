@@ -33,7 +33,6 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
         assigned_to: String(data.assigned_to?.value)
       }
       await tasksApi.createTask(body)
-      toast.success('Task has been created')
     } catch (e) {
       toast.error('Something went wrong on task creating')
       console.log(e, data)
@@ -49,7 +48,6 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
         assigned_to: String(data.assigned_to?.value)
       }
       await tasksApi.updateTask(Number(id), body)
-      toast.success('Task has been updated')
     } catch (e) {
       toast.error('Something went wrong on task updating')
       console.log(e, data)
@@ -61,6 +59,7 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
     try {
       isEdit ? await editTask(data) : await createTask(data)
       router.refresh()
+      toast.success(`Task has been ${isEdit ? 'updated' : 'created'} successfully`)
       onClose()
     } catch (e) {
       toast.error('Failed to submit tasks data')

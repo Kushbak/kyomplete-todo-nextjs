@@ -45,8 +45,8 @@ const TaskFilterPanel = ({ users }: Props) => {
     const searchParams = objectToSearchParams(params).toString()
 
     router.push(`${PAGES.HOME}?${searchParams}`)
-    toast.success('Filters applied')
     router.refresh()
+    toast.success('Filters applied')
   }
 
   useEffect(() => {

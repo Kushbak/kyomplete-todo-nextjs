@@ -29,9 +29,9 @@ const CompleteTask = ({ onClose }: Props) => {
       setIsLoading(true)
       try {
         await tasksApi.updateTask(+id, { result: raw, is_completed: true })
+        router.refresh()
         toast.success('Task has been successfully completed')
         onClose()
-        router.refresh()
       } catch (e) {
         toast.error('Failed to mark the task complete. Please try again')
       } finally {
