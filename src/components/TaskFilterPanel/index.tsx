@@ -5,10 +5,10 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { usersApi } from "@/api"
 import { PAGES } from "@/utils/const"
 import { FilterState, IUser, SelectOption } from "@/types"
 import { convertToSelect, objectToSearchParams, searchParamsToObject, toRequestDateFormat } from "@/utils"
+import { toast } from "react-toastify"
 import dayjs, { Dayjs } from '@/utils/dayjs'
 import styles from './index.module.scss'
 
@@ -45,6 +45,7 @@ const TaskFilterPanel = ({ users }: Props) => {
     const searchParams = objectToSearchParams(params).toString()
 
     router.push(`${PAGES.HOME}?${searchParams}`)
+    toast.success('Filters applied')
     router.refresh()
   }
 

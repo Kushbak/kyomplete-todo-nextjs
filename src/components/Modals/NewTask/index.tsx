@@ -21,6 +21,7 @@ interface Props {
 
 const NewTaskModal = ({ isEdit, onClose }: Props) => {
   const [users, setUsers] = useState<SelectOption[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const searchParams = useSearchParams()
   const router = useRouter();
 
@@ -56,9 +57,16 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
   }
 
   const onSubmit = async (data: ITaskForm) => {
-    isEdit ? await editTask(data) : await createTask(data)
-    router.refresh()
-    onClose()
+    setIsLoading(true)
+    try {
+      isEdit ? await editTask(data) : await createTask(data)
+      router.refresh()
+      onClose()
+    } catch (e) {
+      toast.error('Failed to submit tasks data')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleDateChange = (value: Dayjs | string | null) => {
@@ -123,7 +131,7 @@ const NewTaskModal = ({ isEdit, onClose }: Props) => {
             }}
           />
           <DateTimePicker label="Basic date time picker" value={formik.values.due_date} onChange={handleDateChange} />
-          <Button type="submit" className={styles.newTaskForm__submit} variant="contained">Submit</Button>
+          <Button type="submit" className={styles.newTaskForm__submit} variant="contained">{isLoading ? 'Submitting...' : 'Submit'}</Button>
         </form>
       </LocalizationProvider>
     </ModalTemplate>

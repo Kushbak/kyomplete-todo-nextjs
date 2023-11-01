@@ -17,6 +17,7 @@ interface Props {
 
 const CompleteTask = ({ onClose }: Props) => {
   const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -25,6 +26,7 @@ const CompleteTask = ({ onClose }: Props) => {
     if (id) {
       const contentState = editorState.getCurrentContent();
       const raw = convertToRaw(contentState)
+      setIsLoading(true)
       try {
         await tasksApi.updateTask(+id, { result: raw, is_completed: true })
         toast.success('Task has been successfully completed')
@@ -32,6 +34,8 @@ const CompleteTask = ({ onClose }: Props) => {
         router.refresh()
       } catch (e) {
         toast.error('Failed to mark the task complete. Please try again')
+      } finally {
+        setIsLoading(false)
       }
     }
   }
@@ -45,7 +49,7 @@ const CompleteTask = ({ onClose }: Props) => {
           editorClassName={styles.completeTask__editor}
         />
         <div className="styles completeTask__actions">
-          <Button variant="contained" onClick={onSubmit}>Save</Button>
+          <Button variant="contained" onClick={onSubmit}>{isLoading ? 'Saving...' : 'Save'}</Button>
           <Button onClick={onClose}>Cancel</Button>
         </div>
       </div>

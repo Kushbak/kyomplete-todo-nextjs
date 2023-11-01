@@ -48,7 +48,7 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
       toast.success('Task has been deleted')
       router.refresh()
     } catch (e) {
-      toast.error('Something went wrong')
+      toast.error('Failed to delete task')
     }
   }
 
@@ -66,10 +66,15 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
     if (!value) {
       return handleCloseDueModal()
     }
-    await tasksApi.updateTask(taskId, {
-      due_date: toRequestDateFormat(value)
-    })
+    try {
+      await tasksApi.updateTask(taskId, {
+        due_date: toRequestDateFormat(value)
+      })
+    } catch (e) {
+      toast.error('Failed to delete task')
+    }
     handleCloseDueModal()
+    toast.success('Due has been successfully changed')
     router.refresh()
   }
 
