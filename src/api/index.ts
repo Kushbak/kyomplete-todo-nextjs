@@ -1,7 +1,7 @@
 import { ITask, ITaskRequest, IUser, RegisterForm } from "@/types";
 import Fetcher from "./fetcher";
 
-const instance = new Fetcher({ base_url: process.env.API_URL || "http://localhost:3333" });
+const instance = new Fetcher({ base_url: "https://kyomplete-todo-nestjs.onrender.com" });
 
 export const authApi = {};
 
