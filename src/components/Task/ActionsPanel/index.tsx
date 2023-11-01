@@ -1,30 +1,23 @@
 'use client'
 
-import { tasksApi } from "@/api"
-import { toDatePickerStateFormat, toRequestDateFormat } from "@/utils"
-import { PAGES, TIME_INTERVALS } from "@/utils/const"
-import { Alarm, Delete, Edit } from "@mui/icons-material"
-import { IconButton, MenuItem, TextField } from "@mui/material"
-import { DateTimePicker, LocalizationProvider, MobileDateTimePicker } from "@mui/x-date-pickers"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import dayjs from "@/utils/dayjs"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { propagateServerField } from "next/dist/server/lib/render-server"
-import { Dayjs } from "dayjs"
+import { Alarm, Delete, Edit } from "@mui/icons-material"
+import { IconButton, MenuItem, TextField, TextFieldProps } from "@mui/material"
+import { LocalizationProvider, MobileDateTimePicker } from "@mui/x-date-pickers"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { tasksApi } from "@/api"
+import { toRequestDateFormat } from "@/utils"
+import { MODAL_KEYS, TIME_INTERVALS } from "@/utils/const"
+import dayjs, { Dayjs } from "@/utils/dayjs"
 
 interface Props {
   taskId: number
   due_date: string
 }
 
-const UpdateDueIcon = (props: any) => (
-  <IconButton {...props} aria-label="due">
-    <Alarm />
-  </IconButton>
-)
-
+// to add 30min interval time picker
 const TimeSlot = (props: any) => (
   <TextField
     {...props}
@@ -46,6 +39,8 @@ const TimeSlot = (props: any) => (
 const ActionsPanel = ({ taskId, due_date }: Props) => {
   const [isUpdateDueModalOpen, setIsUpdateDueModalOpen] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const handleDeleteTask = async () => {
     try {
@@ -58,7 +53,10 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
   }
 
   const handleOpenEditTask = () => {
-    router.push(PAGES.EDIT_TASK_MODAL + taskId)
+    const searchParamsWithModal = new URLSearchParams(searchParams)
+    searchParamsWithModal.append('modal', MODAL_KEYS.EDIT_TASK)
+    searchParamsWithModal.append('id', String(taskId))
+    router.push(`${pathname}?${searchParamsWithModal}`)
   }
 
   const handleOpenDueModal = () => setIsUpdateDueModalOpen(true)
@@ -80,19 +78,22 @@ const ActionsPanel = ({ taskId, due_date }: Props) => {
       <IconButton onClick={handleOpenEditTask} aria-label="edit">
         <Edit />
       </IconButton>
-      <MobileDateTimePicker
-        ampm
-        autoFocus
-        slots={{
-          field: UpdateDueIcon,
-          textField: TimeSlot,
-        }}
-        onOpen={handleOpenDueModal}
-        onClose={handleCloseDueModal}
-        open={isUpdateDueModalOpen}
-        onAccept={handleSaveUpdatedDue}
-        defaultValue={dayjs(due_date)}
-      />
+      <IconButton onClick={handleOpenDueModal} aria-label="due">
+        <Alarm />
+      </IconButton>
+      {isUpdateDueModalOpen &&
+        <MobileDateTimePicker
+          ampm
+          autoFocus
+          slots={{
+            textField: () => <></>,
+          }}
+          onClose={handleCloseDueModal}
+          open={isUpdateDueModalOpen}
+          onAccept={handleSaveUpdatedDue}
+          defaultValue={dayjs(due_date)}
+        />
+      }
       <IconButton onClick={handleDeleteTask} aria-label="delete">
         <Delete />
       </IconButton>

@@ -1,7 +1,6 @@
 import { SelectOption } from "@/types";
 import { DATE_PICKER_STATE_FORMAT, REQUEST_DATE_FORMAT } from "./const";
-import dayjs from "./dayjs";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "./dayjs";
 
 export const hasValue = (val: any) => {
   // need this to check empty value of mui components
@@ -38,7 +37,7 @@ export const toRequestDateFormat = (
   return d.format(REQUEST_DATE_FORMAT);
 };
 
-export const toDatePickerStateFormat = (date: string) => {
+export const toDatePickerStateFormat = (date: string | Dayjs) => {
   return dayjs(date).format(DATE_PICKER_STATE_FORMAT)
 }
 
@@ -50,6 +49,7 @@ export const convertToSelect = (
   valueKey = "id"
 ): SelectOption[] => {
   return data.map((item) => ({
+    id: String(item['id'] || item[valueKey]),
     label: item[labelKey],
     value: item[valueKey],
   }));

@@ -4,22 +4,22 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Autocomplete, Button, TextField } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Autocomplete, Button, Chip, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import ModalTemplate from "@/components/Modals/modal-template";
-import { PAGES } from "@/utils/const";
 import { ITaskForm, SelectOption } from "@/types";
-import { useRouter, useSearchParams } from "next/navigation";
-import dayjs from "@/utils/dayjs";
+import dayjs, { Dayjs } from "@/utils/dayjs";
 import { tasksApi, usersApi } from "@/api";
-import { convertToSelect, toRequestDateFormat } from "@/utils";
+import { convertToSelect, getToday, toRequestDateFormat } from "@/utils";
 import styles from './index.module.scss'
 
 interface Props {
   isEdit?: boolean
+  onClose: () => void
 }
 
-const NewTaskModal = ({ isEdit }: Props) => {
+const NewTaskModal = ({ isEdit, onClose }: Props) => {
   const [users, setUsers] = useState<SelectOption[]>([])
   const searchParams = useSearchParams()
   const router = useRouter();
@@ -61,7 +61,7 @@ const NewTaskModal = ({ isEdit }: Props) => {
     onClose()
   }
 
-  const handleDateChange = (value: string | null) => {
+  const handleDateChange = (value: Dayjs | string | null) => {
     formik.setFieldValue('due_date', value)
   }
 
@@ -69,19 +69,14 @@ const NewTaskModal = ({ isEdit }: Props) => {
     formik.setFieldValue('assigned_to', data)
   }
 
-  const onClose = () => {
-    router.push(PAGES.HOME)
-  }
-
   const title = isEdit ? 'Edit Task' : 'New Task'
 
   const formik = useFormik<ITaskForm>({
     initialValues: {
       title: '',
-      due_date: null,
+      due_date: getToday().add(1, 'day'),
       assigned_to: null
     },
-    enableReinitialize: true,
     onSubmit,
   })
 
@@ -117,6 +112,15 @@ const NewTaskModal = ({ isEdit }: Props) => {
             onChange={(e, data) => handleAssigneeChange(data)}
             value={formik.values.assigned_to}
             renderInput={params => <TextField {...params} label='Assign to' name="assigned_to" required />}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            renderOption={(props, option) => (
+              <li {...props} key={option.id}>{option.label}</li>
+            )}
+            renderTags={(tagValue, getTagProps) => {
+              return tagValue.map((option, index) => (
+                <Chip {...getTagProps({ index })} key={option.id} label={option.label} />
+              ))
+            }}
           />
           <DateTimePicker label="Basic date time picker" value={formik.values.due_date} onChange={handleDateChange} />
           <Button type="submit" className={styles.newTaskForm__submit} variant="contained">Submit</Button>

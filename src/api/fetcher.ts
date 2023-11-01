@@ -1,5 +1,4 @@
 import { objectToSearchParams } from "@/utils";
-import { toast } from "react-toastify";
 
 interface FetcherParams {
   base_url: string;
@@ -69,7 +68,6 @@ export default class Fetcher {
       return data;
     } catch (e) {
       console.log(e);
-      throw e;
     }
   }
 }

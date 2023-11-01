@@ -1,11 +1,11 @@
-import { ITask } from "@/types"
-import { Box, Checkbox, Tooltip } from "@mui/material"
-import styles from './index.module.scss'
-import dayjs from '@/utils/dayjs'
 import classNames from "classnames"
+import { ITask } from "@/types"
+import { Box, Tooltip } from "@mui/material"
+import dayjs from '@/utils/dayjs'
 import ActionsPanel from "./ActionsPanel"
 import { REQUEST_DATE_FORMAT } from "@/utils/const"
 import CompleteTask from "./CompleteTask"
+import styles from './index.module.scss'
 
 interface Props {
   task: ITask
